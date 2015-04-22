@@ -16,18 +16,17 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class MainDriver {
 	
-	public static int pageCount = 0;
+	public static double PAGE_COUNT = 0.0;
 	private static String input, output;
 	
 	public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
 		
 		boolean run = true;
-		int iterationCount = 0;
+		int iterationCount = 0, pageCount = 0;
 		List<Double> previousRank = new ArrayList<Double>();
 		List<Double> currentRank = new ArrayList<Double>();
-		double sigma = 0.05;
-		double rank;
-		double change;
+		double sigma = 0.05, rank, change;
+		
 		FileSystem fs = FileSystem.get(new Configuration());
 		Path inFile = new Path(args[0] + "/test.txt");
 		
@@ -43,13 +42,17 @@ public class MainDriver {
 		}
 		br.close();
 		
+		PAGE_COUNT = pageCount;
+		System.out.println("Page count: " + PAGE_COUNT);
+		
 		//Initialize currentRanks list to 0s
 		for(int i=0; i<pageCount; i++){
-			currentRank.add((double) 1/pageCount);
+			currentRank.add(1.0 / pageCount);
 		}
 		
 		while(run){
-	
+			System.out.println("Page count: " + PAGE_COUNT);
+			
 			//Job
 			Job job = new Job();
 			job.setJarByClass(MainDriver.class);
@@ -86,7 +89,7 @@ public class MainDriver {
 	public static double compareSigma(List<Double> prevRank, List<Double> curRank){
 		double change = 0;
 		double sum = 0;
-		for(int i=0; i<pageCount; i++){
+		for(int i=0; i<PAGE_COUNT; i++){
 			sum += Math.pow((curRank.get(i) - prevRank.get(i)), 2);
 			change = Math.sqrt(sum);
 		}

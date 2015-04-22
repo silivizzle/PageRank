@@ -22,7 +22,13 @@ public class PageRankMapper extends
 		}
 		
 		//Emit output: PageN, RankN, and links
-		String links = String.join(",", page.getLinks());
+		StringBuilder links = new StringBuilder();
+		String delim = "#";
+		for(String link : page.getLinks()){
+			links.append(delim);
+			links.append(link);
+			delim = ",";
+		}
 		context.write(new Text(page.getPageId()), new Text(links.toString()));
 		System.out.println(page.getPageId()+"\t"+links.toString());
 	}
