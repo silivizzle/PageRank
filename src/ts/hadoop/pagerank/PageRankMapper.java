@@ -18,7 +18,6 @@ public class PageRankMapper extends
 			StringBuilder sb = new StringBuilder();
 			sb.append(page.getPageId() + ":" + page.getRank() + ":" + page.getLinks().size());
 			context.write(new Text(link), new Text(sb.toString()));	
-			System.out.println(link + "\t" + sb.toString());
 		}
 		
 		//Emit output: PageN, RankN, and links
@@ -30,7 +29,6 @@ public class PageRankMapper extends
 			delim = ",";
 		}
 		context.write(new Text(page.getPageId()), new Text(links.toString()));
-		System.out.println(page.getPageId() + links.toString());
 	}
 
 }

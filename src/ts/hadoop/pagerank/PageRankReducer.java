@@ -36,7 +36,6 @@ public class PageRankReducer extends
 				sb.append(Double.toString(newRank) + "\t" + links);
 				Text newInfo = new Text(sb.toString());
 				context.write(key, newInfo);
-				System.out.println(key + newInfo.toString());
 		}//end while loop
 		
 	}//end void
