@@ -13,7 +13,6 @@ public class PageRankReducer extends
 			
 			Page page = new Page();
 			double newRank = 0.0, sum = 0.0, rankLink = 0.0, numOutLinks = 0.0, beta = 0.85;
-			//double n = MainDriver.PAGE_COUNT;
 			String links = "";
 			page.setPageId(key.toString());
 			
@@ -30,15 +29,12 @@ public class PageRankReducer extends
 					rankLink = Double.parseDouble(line[1]);
 					numOutLinks = Double.parseDouble(line[2]);
 					sum += (rankLink/numOutLinks);
-					System.out.println("Sum " + sum);
 				}
-			}//end for loop
-				
-				newRank = ((1-beta)/MainDriver.PAGE_COUNT) + beta*(sum);
-				System.out.println("N:  " + MainDriver.PAGE_COUNT);
-				System.out.println("new rank " + newRank);				
-				Text newKey = new Text(page.getPageId().toString() + "|" + Double.toString(newRank) + "\t");
-				context.write(newKey, new Text(links));
+			}//end for loop			
+				newRank = ((1-beta)/MainDriver.PAGE_COUNT) + beta*(sum);			
+				Text newInfo = new Text( "|" + Double.toString(newRank) + "\t" + links);
+				context.write(key, newInfo);
+				System.out.println(key + links);
 		}//end while loop
 		
 	}//end void
