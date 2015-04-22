@@ -13,23 +13,18 @@ public class PageRankMapper extends
 		//Assign attributes to page from line
 		Page page = new Page(value.toString());
 				
-		//Emit output: key = linkN & value = PageN:pageRank/votes
-		while(page.getLinks().iterator().hasNext()){
-			String link = page.getLinks().iterator().next();
+		//Emit output: key = linkN  value = PageN:pageRank:votes
+		for(String link : page.getLinks()){
 			StringBuilder sb = new StringBuilder();
-			sb.append(page.getPageId() + ":" + page.getRank() + "/" + page.getLinks().size());
+			sb.append(page.getPageId() + ":" + page.getRank() + ":" + page.getLinks().size());
 			context.write(new Text(link), new Text(sb.toString()));			
+			System.out.println(link + "\t" + sb.toString());
 		}
 		
 		//Emit output: PageN, RankN, and links
-		StringBuilder links = new StringBuilder();
-		for(String link : page.getLinks()){
-			links.append(link);
-			if(page.getLinks().iterator().hasNext()){
-				links.append(",");
-			}
-		}
-		context.write(new Text(page.getPageId()), new Text(links.toString()));		
+		String links = String.join(",", page.getLinks());
+		context.write(new Text(page.getPageId()), new Text(links.toString()));
+		System.out.println(page.getPageId()+"\t"+links.toString());
 	}
 
 }

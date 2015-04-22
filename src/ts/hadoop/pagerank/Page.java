@@ -19,9 +19,9 @@ public class Page {
 	}
 	//Assign key value pair
 	public Page(String pageInfo){
-		String[] input = pageInfo.split("|");
-		String key = "", value = "";
-		
+		//input: pageId|pageRank<TAB>Link1,Link2,...,LinkN
+		String[] input = pageInfo.split("\\|");
+		String key = "", value = "";	
 		try{
 			key = input[0];
 			value = input[1];
@@ -62,6 +62,20 @@ public class Page {
 
 	public void setLinks(List<String> links) {
 		this.links = links;
+	}
+	
+	public String getNumLinks(){
+		String numLinks = Integer.toString(links.size());
+		return numLinks;
+		
+	}
+	
+	public void printPageInfo(){
+		System.out.println("================");
+		System.out.println("Page Id: " + pageId);
+		System.out.println("Rank: " + rank);
+		System.out.println("Links: " + getNumLinks());
+		System.out.println("================");
 	}
 	
 	

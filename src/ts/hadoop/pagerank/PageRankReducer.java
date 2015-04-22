@@ -14,45 +14,44 @@ public class PageRankReducer extends
 			Page page = new Page();
 			double newRank = 0.0;
 			double beta = 0.85;
-			double rankLink, linkVotes;
-			String [] pageValues;
+			double rankLink = 0, numOutLinks = 0;
 			double n = MainDriver.pageCount;
+			String links = "";
 			page.setPageId(key.toString());
-			
 			for(Text value : values){
 				
-				//if line looks like "pageId:rank/votes"
-				if(value.toString().contains(":")){
-				
-					//separate pageId from rank/votes
-					String[] line = value.toString().split(":");
-					
-					//single out the rank of the in link and its votes
-					if(line.toString().contains("/")){						
-						pageValues = line[1].split("/");
-						rankLink = Double.parseDouble(pageValues[0]);
-						linkVotes = Double.parseDouble(pageValues[1]);
-					}
-					else{
-						rankLink = Double.parseDouble(line[1]);
-						linkVotes = 1;
-					}	
-					
-					newRank += (beta * (rankLink/linkVotes)) + (1-beta)/n;
+				//Capture if line looks like "link1,...,linkN"
+				if( value.toString().contains(",")){
+					System.out.println(key + "\t" + value + " contains ','");
+					links = value.toString();
 				}
-				//Emit new rank
-				else{
+				else
+				//process if line looks like "inLink:rank:numLinks
+					System.out.println(key + "\t" + value + " contains ':'");
+					String[] line = value.toString().split(":");
+					System.out.println("Line array length: " + line.length);
+				//set variables
+				if(line.length == 3){						
+					rankLink = Double.parseDouble(line[1]);
+					numOutLinks = Double.parseDouble(line[2]);
+				}
+				else if(line.length == 1){
+					System.out.println("Line array length: " + line.length);
+					rankLink = Double.parseDouble(line[1]);
+					numOutLinks = 1;
+				}
+				
+				newRank += beta*(rankLink/numOutLinks) + ((1-beta)/n);
+		
+				System.out.println(key + "\t " + "Links: " + links);
+					
 					
 					//combine pageId with its new rank and place the outlinks as the output
 					Text newKey = new Text(page.getPageId().toString() + "|" + Double.toString(newRank) + "\t");
-					context.write(newKey, new Text(values.toString()));
-				}
+					context.write(newKey, new Text(links));
+			}//end for loop
+		
+		}//end while loop
 			
-				
-				
-			}
-			
-		}
 	}
-
 }

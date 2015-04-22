@@ -16,7 +16,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 public class MainDriver {
 	
-	public static int pageCount;
+	public static int pageCount = 0;
 	private static String input, output;
 	
 	public static void main(String[] args) throws IOException, InterruptedException, ClassNotFoundException {
@@ -29,13 +29,13 @@ public class MainDriver {
 		double rank;
 		double change;
 		FileSystem fs = FileSystem.get(new Configuration());
-		Path path = new Path(args[0]);
+		Path inFile = new Path(args[0] + "/test.txt");
 		
 		//Get number of pages and initial ranks
-		BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(path)));
+		BufferedReader br = new BufferedReader(new InputStreamReader(fs.open(inFile)));
 		while(br.readLine() != null){
 			//line: pageId|rank<TAB>link1,link2,...,linkN
-			String[] line = br.readLine().split("|");
+			String[] line = br.readLine().split("\\|");
 			String[] values = line[1].split("\t");
 			rank = Double.parseDouble(values[0].toString());
 			previousRank.add(rank);
@@ -66,13 +66,11 @@ public class MainDriver {
 			else 
 				input = args[1] + "_" + iterationCount;
 				output = args[1] + "_" + (iterationCount + 1);
-			
-			 
+						 
 			FileInputFormat.setInputPaths(job, new Path(input));
 			FileOutputFormat.setOutputPath(job, new Path(output));
 	
 			job.waitForCompletion(true);
-			
 			change = compareSigma(previousRank, currentRank);
 			if(change < sigma){
 				run = false;
@@ -80,8 +78,7 @@ public class MainDriver {
 			else
 				previousRank = getRank(new Path(input));
 				currentRank = getRank(new Path(output));
-				iterationCount++;
-			
+				iterationCount++;		
 		}
 		
 	};
@@ -109,8 +106,7 @@ public class MainDriver {
 			rankList.add(rank);
 		}
 		br.close();
-		return rankList;
-		
+		return rankList;		
 	}
 
 }
