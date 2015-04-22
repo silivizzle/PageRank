@@ -16,26 +16,15 @@ public class Page {
 		this.pageId = pageId;
 		this.rank = rank;
 		this.links = links;
-	}
+	}	
 	//Assign key value pair
 	public Page(String pageInfo){
-		//input: pageId|pageRank<TAB>Link1,Link2,...,LinkN
-		String[] input = pageInfo.split("\\|");
-		String key = "", value = "";	
-		try{
-			key = input[0];
-			value = input[1];
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			System.exit(1);
-		}
-		
+		//input: pageId<TAB>pageRank<TAB>Link1,Link2,...,LinkN
+		String[] input = pageInfo.split("\t");
 		//Assign node attributes
-		this.pageId = key;
-		String[] tokens = value.split("\t");		
-		this.rank = tokens[0];
-		for(String link : tokens[1].split(",")){
+		this.pageId = input[0];	
+		this.rank = input[1];
+		for(String link : input[2].split(",")){
 			this.links.add(link);
 		}
 	}
@@ -70,14 +59,4 @@ public class Page {
 		
 	}
 	
-	public void printPageInfo(){
-		System.out.println("================");
-		System.out.println("Page Id: " + pageId);
-		System.out.println("Rank: " + rank);
-		System.out.println("Links: " + getNumLinks());
-		System.out.println("================");
-	}
-	
-	
-
 }

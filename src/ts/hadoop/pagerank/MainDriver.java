@@ -21,7 +21,7 @@ public class MainDriver {
 		
 		int iterationCount = 0;
 		
-		while(iterationCount < 3){
+		while(iterationCount < 9){
 			Job job = new Job();
 			job.setJarByClass(MainDriver.class);
 			job.setMapperClass(PageRankMapper.class);

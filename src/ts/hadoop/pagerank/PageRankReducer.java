@@ -31,10 +31,12 @@ public class PageRankReducer extends
 					sum += (rankLink/numOutLinks);
 				}
 			}//end for loop			
-				newRank = ((1-beta)/MainDriver.PAGE_COUNT) + beta*(sum);			
-				Text newInfo = new Text( "|" + Double.toString(newRank) + "\t" + links);
+				newRank = ((1-beta)/MainDriver.PAGE_COUNT) + beta*(sum);
+				StringBuilder sb = new StringBuilder();
+				sb.append(Double.toString(newRank) + "\t" + links);
+				Text newInfo = new Text(sb.toString());
 				context.write(key, newInfo);
-				System.out.println(key + links);
+				System.out.println(key + newInfo.toString());
 		}//end while loop
 		
 	}//end void
